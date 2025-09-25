@@ -1,7 +1,12 @@
-// Diccionari global d'usuaris (usuari -> password)
-const users = {
+// Cargar usuarios de localStorage o usar el inicial
+let users = JSON.parse(localStorage.getItem('users')) || {
   "usuariInicial": "contrasenya123"
 };
+
+// Guardar cambios en localStorage
+function saveUsers() {
+  localStorage.setItem('users', JSON.stringify(users));
+}
 
 // Login
 const loginForm = document.getElementById("loginForm");
@@ -27,7 +32,6 @@ const registerMessage = document.getElementById("registerMessage");
 
 registerForm.addEventListener("submit", function(e) {
   e.preventDefault();
-  const email = document.getElementById("registerEmail").value;
   const username = document.getElementById("registerUsername").value;
   const password = document.getElementById("registerPassword").value;
   const confirmPassword = document.getElementById("registerConfirmPassword").value;
@@ -45,9 +49,10 @@ registerForm.addEventListener("submit", function(e) {
   }
 
   users[username] = password;
+  saveUsers(); // guardamos en localStorage
+
   registerMessage.style.color = "green";
   registerMessage.textContent = "Usuari registrat correctament!";
 
-  // Neteja formulari
   registerForm.reset();
 });
