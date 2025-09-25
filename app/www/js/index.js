@@ -1,12 +1,7 @@
-// Cargar usuarios de localStorage o usar el inicial
-let users = JSON.parse(localStorage.getItem('users')) || {
-  "usuariInicial": "contrasenya123"
+// Diccionari global d'usuaris amb un usuari hardcoded
+const users = {
+  "usuariInicial": "contrasenya123"  
 };
-
-// Guardar cambios en localStorage
-function saveUsers() {
-  localStorage.setItem('users', JSON.stringify(users));
-}
 
 // Login
 const loginForm = document.getElementById("loginForm");
@@ -49,7 +44,6 @@ registerForm.addEventListener("submit", function(e) {
   }
 
   users[username] = password;
-  saveUsers(); // guardamos en localStorage
 
   registerMessage.style.color = "green";
   registerMessage.textContent = "Usuari registrat correctament!";
