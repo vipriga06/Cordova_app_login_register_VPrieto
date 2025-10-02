@@ -1,38 +1,224 @@
+@import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  padding: 20px;
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  background: #000000;
+  color: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.02em;
+  position: relative;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 2rem 0;
+}
+
+/* Actualizar el fondo con estilo Mac abstracto */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    radial-gradient(circle at 30% 50%, rgba(76, 0, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 50%, rgba(0, 163, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, #090909 0%, #000000 100%);
+  will-change: transform;
+  transform: translateZ(0);
+  animation: rotateBackground 30s linear infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .container {
-  max-width: 400px;
+  width: 90%;
+  max-width: 380px;
+  padding: 20px;
   margin: auto;
+  height: auto;
+  min-height: min-content;
 }
 
 form {
-  margin-bottom: 30px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(25px) saturate(200%);
+  -webkit-backdrop-filter: blur(25px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  border-radius: 24px;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+form:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 8px 32px -1px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 label {
   display: block;
-  margin-top: 10px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 0 0 3px rgba(255, 255, 255, 0.1),
+    0 2px 15px rgba(0, 0, 0, 0.2);
 }
 
 button {
-  margin-top: 15px;
-  padding: 10px;
   width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+button:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset;
 }
 
 .message {
-  color: red;
-  margin-top: 10px;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.message.success {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+}
+
+.message.error {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* Modificar el estilo del body */
+body {
+  // ...existing code...
+  min-height: 100vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 2rem 0;
+}
+
+/* Optimizar el contenedor principal */
+.container {
+  // ...existing code...
+  margin: auto;
+  height: auto;
+  min-height: min-content;
+}
+
+/* Optimizar las animaciones para mejor rendimiento */
+form {
+  // ...existing code...
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Mejorar el rendimiento del fondo */
+body::before {
+  // ...existing code...
+  will-change: transform;
+  transform: translateZ(0);
+  animation: rotateBackground 30s linear infinite;
+  pointer-events: none;
+}
+
+/* Optimizar scrollbar para modo oscuro */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Asegurar que los elementos mantienen su posición */
+* {
+  // ...existing code...
+  position: relative;
+}
+
+/* Añadir animación de rotación suave para el fondo */
+@keyframes rotateBackground {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
