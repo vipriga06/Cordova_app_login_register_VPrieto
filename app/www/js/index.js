@@ -7,11 +7,19 @@ const users = {
   }
 };
 
-// Selecció d'elements del DOM
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-const registerForm = document.getElementById("registerForm");
-const registerMessage = document.getElementById("registerMessage");
+// Selecció d'elements del DOM (optimitzat)
+const formElements = {
+  loginForm: document.getElementById("loginForm"),
+  loginMessage: document.getElementById("loginMessage"),
+  registerForm: document.getElementById("registerForm"),
+  registerMessage: document.getElementById("registerMessage"),
+  loginUsername: document.getElementById("loginUsername"),
+  loginPassword: document.getElementById("loginPassword"),
+  registerUsername: document.getElementById("registerUsername"),
+  registerEmail: document.getElementById("registerEmail"),
+  registerPassword: document.getElementById("registerPassword"),
+  registerConfirmPassword: document.getElementById("registerConfirmPassword")
+};
 
 /**
  * Mostra un missatge a l'element especificat.
@@ -23,69 +31,124 @@ function showMessage(element, text, isSuccess) {
   element.textContent = text;
   element.classList.remove('success', 'error');
   element.classList.add(isSuccess ? 'success' : 'error');
+  element.style.opacity = '1';
+  element.style.transform = 'translateY(0)';
+}
+
+/**
+ * Valida el format d'un email
+ * @param {string} email - Email a validar
+ * @returns {boolean} True si el format és vàlid
+ */
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
+ * Valida la contrasenya
+ * @param {string} password - Contrasenya a validar
+ * @returns {boolean} True si la contrasenya és vàlida
+ */
+function isValidPassword(password) {
+  return password.length >= 6;
 }
 
 // Gestor de l'inici de sessió
-loginForm.addEventListener("submit", function(e) {
+formElements.loginForm.addEventListener("submit", function(e) {
   e.preventDefault();
-  const username = document.getElementById("loginUsername").value;
-  const password = document.getElementById("loginPassword").value;
+  const username = formElements.loginUsername.value.trim();
+  const password = formElements.loginPassword.value;
 
   if (users[username] && users[username].password === password) {
-    showMessage(loginMessage, "Login correcte!", true);
+    showMessage(formElements.loginMessage, "Login correcte!", true);
+    // Aquí podries redirigir o fer alguna acció després del login
   } else {
-    showMessage(loginMessage, "Usuari o contrasenya incorrectes.", false);
+    showMessage(formElements.loginMessage, "Usuari o contrasenya incorrectes.", false);
   }
 });
 
 // Gestor del registre d'usuari
-registerForm.addEventListener("submit", function(e) {
+formElements.registerForm.addEventListener("submit", function(e) {
   e.preventDefault();
-  const username = document.getElementById("registerUsername").value;
-  const email = document.getElementById("registerEmail").value;
-  const password = document.getElementById("registerPassword").value;
-  const confirmPassword = document.getElementById("registerConfirmPassword").value;
+  const username = formElements.registerUsername.value.trim();
+  const email = formElements.registerEmail.value.trim();
+  const password = formElements.registerPassword.value;
+  const confirmPassword = formElements.registerConfirmPassword.value;
+
+  // Validacions
+  if (!isValidEmail(email)) {
+    showMessage(formElements.registerMessage, "Si us plau, introdueix un email vàlid", false);
+    return;
+  }
+
+  if (!isValidPassword(password)) {
+    showMessage(formElements.registerMessage, "La contrasenya ha de tenir mínim 6 caràcters", false);
+    return;
+  }
 
   if (password !== confirmPassword) {
-    showMessage(registerMessage, "Les contrasenyes no coincideixen.", false);
+    showMessage(formElements.registerMessage, "Les contrasenyes no coincideixen.", false);
     return;
   }
 
   if (users[username]) {
-    showMessage(registerMessage, "Aquest usuari ja existeix.", false);
+    showMessage(formElements.registerMessage, "Aquest usuari ja existeix.", false);
     return;
   }
 
-  users[username] = { password, username, email };
-  showMessage(registerMessage, "Usuari registrat correctament!", true);
-  registerForm.reset();
-});
+  // Registre d'usuari
+  users[username] = {
+    password,
+    username,
+    email
+  };
 
+  showMessage(formElements.registerMessage, "Usuari registrat correctament!", true);
+  formElements.registerForm.reset();
+});
 
 // Efecte Parallax optimitzat
 const animatedElements = {
   background: document.querySelector('body::before'),
   forms: document.querySelectorAll('form')
 };
+
 let mouseX = 0;
 let mouseY = 0;
+let animationFrameId = null;
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = (e.clientX - window.innerWidth / 2) * 0.005;
-  mouseY = (e.clientY - window.innerHeight / 2) * 0.005;
-});
+const handleMove = (e) => {
+  const clientX = e.clientX || e.touches?.[0]?.clientX;
+  const clientY = e.clientY || e.touches?.[0]?.clientY;
 
-function animate() {
-  if (animatedElements.background) {
-      animatedElements.background.style.transform = `translate(${mouseX * -2}px, ${mouseY * -2}px)`;
+  if (clientX && clientY) {
+    mouseX = (clientX - window.innerWidth / 2) * 0.005;
+    mouseY = (clientY - window.innerHeight / 2) * 0.005;
   }
+};
+
+const animate = () => {
+  if (animatedElements.background) {
+    animatedElements.background.style.transform = `translate(${mouseX * -2}px, ${mouseY * -2}px)`;
+  }
+
   animatedElements.forms.forEach(form => {
     form.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
   });
-  requestAnimationFrame(animate);
-}
+
+  animationFrameId = requestAnimationFrame(animate);
+};
 
 // Inicia l'animació només si l'usuari no prefereix moviment reduït
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    requestAnimationFrame(animate);
+  document.addEventListener('mousemove', handleMove);
+  document.addEventListener('touchmove', handleMove);
+  animationFrameId = requestAnimationFrame(animate);
 }
+
+// Netejar animació quan es tanqui la pàgina
+window.addEventListener('beforeunload', () => {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+});
